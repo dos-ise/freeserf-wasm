@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
@@ -19,24 +19,24 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         header {
             padding: 20px;
             text-align: center;
             background: rgba(0,0,0,0.3);
         }
-        
+
         h1 {
             font-size: 2.5em;
             margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-        
+
         .subtitle {
             font-size: 1.1em;
             opacity: 0.9;
         }
-        
+
         main {
             flex: 1;
             display: flex;
@@ -45,7 +45,7 @@
             justify-content: center;
             padding: 20px;
         }
-        
+
         #gameContainer {
             background: #000;
             border-radius: 10px;
@@ -55,7 +55,7 @@
             max-width: 1024px;
             width: 100%;
         }
-        
+
         #canvas {
             display: block;
             width: 100%;
@@ -63,7 +63,7 @@
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
-        
+
         #loadingOverlay {
             position: absolute;
             top: 0;
@@ -78,12 +78,12 @@
             z-index: 100;
             transition: opacity 0.5s ease;
         }
-        
-        #loadingOverlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
+
+            #loadingOverlay.hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
+
         .spinner {
             width: 60px;
             height: 60px;
@@ -93,17 +93,19 @@
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
-        
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-        
+
         #statusText {
             font-size: 1.2em;
             margin-bottom: 20px;
             min-height: 30px;
         }
-        
+
         #progressBarContainer {
             width: 300px;
             height: 8px;
@@ -112,14 +114,14 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
-        
+
         #progressBar {
             height: 100%;
             background: linear-gradient(90deg, #4CAF50, #8BC34A);
             width: 0%;
             transition: width 0.3s ease;
         }
-        
+
         #startButton {
             display: none;
             padding: 15px 40px;
@@ -133,16 +135,16 @@
             transition: all 0.3s ease;
             font-weight: bold;
         }
-        
-        #startButton:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
-        }
-        
-        #startButton.visible {
-            display: inline-block;
-        }
-        
+
+            #startButton:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+            }
+
+            #startButton.visible {
+                display: inline-block;
+            }
+
         .controls {
             margin-top: 20px;
             display: flex;
@@ -150,7 +152,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        
+
         .control-btn {
             padding: 10px 20px;
             background: rgba(255,255,255,0.1);
@@ -161,12 +163,12 @@
             transition: all 0.3s ease;
             font-size: 0.9em;
         }
-        
-        .control-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-1px);
-        }
-        
+
+            .control-btn:hover {
+                background: rgba(255,255,255,0.2);
+                transform: translateY(-1px);
+            }
+
         .info-panel {
             margin-top: 20px;
             padding: 20px;
@@ -175,65 +177,65 @@
             max-width: 1024px;
             width: 100%;
         }
-        
-        .info-panel h3 {
-            margin-bottom: 10px;
-            color: #4CAF50;
-        }
-        
+
+            .info-panel h3 {
+                margin-bottom: 10px;
+                color: #4CAF50;
+            }
+
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
-        
+
         .info-card {
             background: rgba(255,255,255,0.05);
             padding: 15px;
             border-radius: 5px;
             border-left: 3px solid #4CAF50;
         }
-        
-        .info-card h4 {
-            margin-bottom: 8px;
-            font-size: 0.9em;
-            color: #8BC34A;
-        }
-        
-        .info-card ul {
-            list-style: none;
-            padding: 0;
-            font-size: 0.85em;
-            line-height: 1.6;
-        }
-        
-        .info-card li:before {
-            content: "▸ ";
-            color: #4CAF50;
-        }
-        
+
+            .info-card h4 {
+                margin-bottom: 8px;
+                font-size: 0.9em;
+                color: #8BC34A;
+            }
+
+            .info-card ul {
+                list-style: none;
+                padding: 0;
+                font-size: 0.85em;
+                line-height: 1.6;
+            }
+
+            .info-card li:before {
+                content: "▸ ";
+                color: #4CAF50;
+            }
+
         footer {
             padding: 20px;
             text-align: center;
             background: rgba(0,0,0,0.3);
             font-size: 0.9em;
         }
-        
-        footer a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-        
-        footer a:hover {
-            text-decoration: underline;
-        }
+
+            footer a {
+                color: #4CAF50;
+                text-decoration: none;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                }
 
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.8em;
             }
-            
+
             .info-grid {
                 grid-template-columns: 1fr;
             }
@@ -245,11 +247,11 @@
         <h1>🏰 Freeserf</h1>
         <p class="subtitle">Settlers 1 Recreation - WebAssembly Edition</p>
     </header>
-    
+
     <main>
         <div id="gameContainer">
             <canvas id="canvas" width="1024" height="768" tabindex="1"></canvas>
-            
+
             <div id="loadingOverlay">
                 <div class="spinner"></div>
                 <div id="statusText">Initialisiere Spiel...</div>
@@ -259,7 +261,7 @@
                 <button id="startButton">🎮 Spiel starten</button>
             </div>
         </div>
-        
+
         <div class="controls">
             <button class="control-btn" onclick="toggleFullscreen()">⛶ Vollbild</button>
             <button class="control-btn" id="muteBtn" onclick="toggleSound()">🔊 Sound</button>
@@ -267,7 +269,7 @@
             <button class="control-btn" onclick="loadGame()">📂 Laden</button>
             <button class="control-btn" onclick="resetGame()">↻ Neustart</button>
         </div>
-        
+
         <div class="info-panel">
             <h3>📖 Spielanleitung</h3>
             <div class="info-grid">
@@ -280,7 +282,7 @@
                         <li>+/-: Spielgeschwindigkeit</li>
                     </ul>
                 </div>
-                
+
                 <div class="info-card">
                     <h4>Tastenkombinationen</h4>
                     <ul>
@@ -290,7 +292,7 @@
                         <li>ESC: Menü</li>
                     </ul>
                 </div>
-                
+
                 <div class="info-card">
                     <h4>Spielziel</h4>
                     <ul>
@@ -300,7 +302,7 @@
                         <li>Besiege deine Gegner</li>
                     </ul>
                 </div>
-                
+
                 <div class="info-card">
                     <h4>Hinweise</h4>
                     <ul>
@@ -312,101 +314,197 @@
             </div>
         </div>
     </main>
-    
+
     <footer>
         <p>
-            Freeserf - Open Source Recreation | 
-            <a href="https://github.com/freeserf/freeserf" target="_blank">GitHub</a> | 
+            Freeserf - Open Source Recreation |
+            <a href="https://github.com/freeserf/freeserf" target="_blank">GitHub</a> |
             WebAssembly Build
         </p>
     </footer>
-    
+
     <script>
+        // Debug-Konsole im UI
+        function addDebugLog(message, type = 'info') {
+            console.log('[DEBUG]', message);
+            const statusText = document.getElementById('statusText');
+            if (statusText) {
+                statusText.textContent = message;
+            }
+
+            // Optional: Füge eine Debug-Liste hinzu
+            let debugList = document.getElementById('debugList');
+            if (!debugList) {
+                debugList = document.createElement('div');
+                debugList.id = 'debugList';
+                debugList.style.cssText = 'position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: #0f0; padding: 10px; font-family: monospace; font-size: 12px; max-width: 400px; max-height: 300px; overflow-y: auto; z-index: 10000;';
+                document.body.appendChild(debugList);
+            }
+
+            const entry = document.createElement('div');
+            entry.style.cssText = 'margin: 2px 0; color: ' + (type === 'error' ? '#f00' : type === 'warn' ? '#ff0' : '#0f0');
+            entry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            debugList.insertBefore(entry, debugList.firstChild);
+
+            // Keep only last 20 entries
+            while (debugList.children.length > 20) {
+                debugList.removeChild(debugList.lastChild);
+            }
+        }
+
+        addDebugLog('Script gestartet');
+
         // Emscripten Module Configuration
         var Module = {
             canvas: document.getElementById('canvas'),
-            
-            print: function(text) {
+
+            // Command-line Argumente für Freeserf
+            arguments: ['-g', '/data'],  // -g = data directory, /data = VFS Pfad
+
+            // WICHTIG: Verhindere automatischen Start von main()
+            noInitialRun: true,
+
+            print: function (text) {
                 console.log('[Freeserf]', text);
+                addDebugLog('OUT: ' + text);
             },
-            
-            printErr: function(text) {
+
+            printErr: function (text) {
                 console.error('[Freeserf Error]', text);
+                addDebugLog('ERR: ' + text, 'error');
             },
-            
-            setStatus: function(text) {
+
+            setStatus: function (text) {
                 const statusText = document.getElementById('statusText');
                 const startButton = document.getElementById('startButton');
                 const loadingOverlay = document.getElementById('loadingOverlay');
-                
+
+                addDebugLog('Status: ' + text);
+
                 if (!text) {
                     statusText.textContent = 'Bereit zum Spielen!';
                     startButton.classList.add('visible');
+                    addDebugLog('Spiel bereit!');
                 } else if (text.includes('Running')) {
                     loadingOverlay.classList.add('hidden');
+                    addDebugLog('Spiel läuft!');
                 } else {
                     statusText.textContent = text;
                 }
             },
-            
+
             totalDependencies: 0,
-            
-            monitorRunDependencies: function(left) {
+
+            monitorRunDependencies: function (left) {
                 this.totalDependencies = Math.max(this.totalDependencies, left);
-                const progress = this.totalDependencies > 0 
+                const progress = this.totalDependencies > 0
                     ? ((this.totalDependencies - left) / this.totalDependencies * 100)
                     : 0;
-                
+
                 const progressBar = document.getElementById('progressBar');
                 progressBar.style.width = progress + '%';
-                
+
+                addDebugLog('Dependencies: ' + left + ' remaining (' + progress.toFixed(1) + '%)');
+
                 if (left === 0) {
                     Module.setStatus('');
+                    addDebugLog('Alle Dependencies geladen!');
                 } else {
                     Module.setStatus('Lade Abhängigkeiten... (' + left + ')');
                 }
             },
-            
+
             preRun: [],
+
             postRun: [
-                function() {
+                function () {
+                    addDebugLog('postRun: Start');
                     console.log('Freeserf initialized!');
-                    
-                    // Setup IndexedDB für persistente Savegames
-                    try {
-                        FS.mkdir('/saves');
-                        FS.mount(IDBFS, {}, '/saves');
-                        
-                        // Lade existierende Saves
-                        FS.syncfs(true, function(err) {
-                            if (err) {
-                                console.warn('Could not load saves:', err);
+
+                    // VFS Diagnose - nutze globale Instance
+                    if (FreeserfInstance && FreeserfInstance.FS) {
+                        try {
+                            addDebugLog('=== VFS Diagnose (postRun) ===');
+                            var files = FreeserfInstance.FS.readdir('/data');
+                            addDebugLog('Dateien in /data: ' + files.join(', '));
+
+                            // Prüfe erste .PA Datei
+                            var paFile = null;
+                            ['SPAE.PA', 'SPAD.PA', 'SPAF.PA', 'SPAU.PA'].forEach(function (f) {
+                                if (files.indexOf(f) >= 0 && !paFile) paFile = f;
+                            });
+
+                            if (paFile) {
+                                var stat = FreeserfInstance.FS.stat('/data/' + paFile);
+                                addDebugLog('/data/' + paFile + ' vorhanden, Größe: ' + stat.size + ' bytes');
+
+                                // Versuche ersten Block zu lesen
+                                try {
+                                    var data = FreeserfInstance.FS.readFile('/data/' + paFile, { encoding: 'binary' });
+                                    addDebugLog('✓ /data/' + paFile + ' ist lesbar! (' + data.length + ' bytes)');
+                                    // Zeige erste 16 Bytes als Hex
+                                    var hex = '';
+                                    for (var i = 0; i < Math.min(16, data.length); i++) {
+                                        hex += ('0' + data[i].toString(16)).slice(-2) + ' ';
+                                    }
+                                    addDebugLog('Erste 16 Bytes: ' + hex);
+                                } catch (e) {
+                                    addDebugLog('✗ Lesefehler: ' + e.message, 'error');
+                                }
                             } else {
-                                console.log('Saves loaded from IndexedDB');
+                                addDebugLog('✗ Keine .PA Dateien gefunden!', 'error');
                             }
-                        });
-                    } catch(e) {
-                        console.warn('IndexedDB not available:', e);
+                            addDebugLog('=== Ende VFS Diagnose ===');
+                        } catch (e) {
+                            addDebugLog('VFS Diagnose Fehler: ' + e.message, 'error');
+                        }
                     }
+
+                    // Setup IndexedDB für persistente Savegames
+                    if (FreeserfInstance && FreeserfInstance.FS) {
+                        try {
+                            addDebugLog('Setup IndexedDB...');
+                            FreeserfInstance.FS.mkdir('/saves');
+                            FreeserfInstance.FS.mount(FreeserfInstance.IDBFS, {}, '/saves');
+
+                            // Lade existierende Saves
+                            FreeserfInstance.FS.syncfs(true, function (err) {
+                                if (err) {
+                                    addDebugLog('Could not load saves: ' + err, 'warn');
+                                } else {
+                                    addDebugLog('Saves loaded from IndexedDB');
+                                }
+                            });
+                        } catch (e) {
+                            addDebugLog('IndexedDB not available: ' + e.message, 'warn');
+                        }
+                    }
+
+                    addDebugLog('postRun: Ende');
+                    addDebugLog('=== Freeserf sollte jetzt laufen ===');
                 }
-            ]
+            ],
+
+            onRuntimeInitialized: function () {
+                addDebugLog('onRuntimeInitialized aufgerufen!');
+            }
         };
-        
+
         // Start Button Handler
-        document.getElementById('startButton').addEventListener('click', function() {
+        document.getElementById('startButton').addEventListener('click', function () {
             const overlay = document.getElementById('loadingOverlay');
             overlay.classList.add('hidden');
-            
+
             // Focus Canvas für Keyboard Input
             const canvas = document.getElementById('canvas');
             canvas.focus();
-            
+
             // Audio Initialisierung (Browser benötigt User-Interaktion)
             if (typeof SDL2 !== 'undefined' && SDL2.audioContext) {
                 SDL2.audioContext.resume();
             }
         });
-        
+
         // Fullscreen Toggle
         function toggleFullscreen() {
             const canvas = document.getElementById('canvas');
@@ -418,20 +516,20 @@
                 document.exitFullscreen();
             }
         }
-        
+
         // Sound Toggle
         let soundMuted = false;
         function toggleSound() {
             soundMuted = !soundMuted;
             const btn = document.getElementById('muteBtn');
             btn.textContent = soundMuted ? '🔇 Stumm' : '🔊 Sound';
-            
+
             // SDL Audio Mute/Unmute falls verfügbar
             if (typeof SDL2 !== 'undefined' && SDL2.audioContext) {
                 SDL2.audioContext[soundMuted ? 'suspend' : 'resume']();
             }
         }
-        
+
         // Save Game
         function saveGame() {
             try {
@@ -439,9 +537,9 @@
                 if (Module._save_game) {
                     Module._save_game();
                 }
-                
+
                 // Sync zu IndexedDB
-                FS.syncfs(false, function(err) {
+                FS.syncfs(false, function (err) {
                     if (err) {
                         alert('Fehler beim Speichern: ' + err);
                     } else {
@@ -449,22 +547,22 @@
                         alert('Spiel gespeichert!');
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 console.error('Save failed:', e);
                 alert('Speichern nicht verfügbar');
             }
         }
-        
+
         // Load Game
         function loadGame() {
             try {
                 // Sync von IndexedDB
-                FS.syncfs(true, function(err) {
+                FS.syncfs(true, function (err) {
                     if (err) {
                         alert('Fehler beim Laden: ' + err);
                     } else {
                         console.log('Saves loaded from IndexedDB');
-                        
+
                         // Trigger Freeserf's load function
                         if (Module._load_game) {
                             Module._load_game();
@@ -472,23 +570,23 @@
                         alert('Spiel geladen!');
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 console.error('Load failed:', e);
                 alert('Laden nicht verfügbar');
             }
         }
-        
+
         // Reset Game
         function resetGame() {
             if (confirm('Spiel wirklich neu starten? Ungespeicherter Fortschritt geht verloren.')) {
                 location.reload();
             }
         }
-        
+
         // Keyboard Shortcuts
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.ctrlKey || e.metaKey) {
-                switch(e.key.toLowerCase()) {
+                switch (e.key.toLowerCase()) {
                     case 'f':
                         e.preventDefault();
                         toggleFullscreen();
@@ -504,18 +602,18 @@
                 }
             }
         });
-        
+
         // Error Handling
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
             console.error('Error:', msg, 'at', url, lineNo + ':' + columnNo);
             const statusText = document.getElementById('statusText');
             statusText.textContent = 'Fehler beim Laden: ' + msg;
             statusText.style.color = '#ff5252';
             return false;
         };
-        
+
         // Prevent accidental page unload
-        window.addEventListener('beforeunload', function(e) {
+        window.addEventListener('beforeunload', function (e) {
             if (Module.HEAPU8) { // Check if game is running
                 e.preventDefault();
                 e.returnValue = '';
@@ -523,8 +621,113 @@
             }
         });
     </script>
-    
+
     <!-- Emscripten generiert diese Datei beim Build -->
-    <script src="freeserf.js"></script>
+    <script src="FreeSerf.js"></script>
+    <script>
+        addDebugLog('FreeSerf.js geladen, starte Initialisierung...');
+
+        // Globale Instance Referenz
+        var FreeserfInstance = null;
+
+        // Lade Game Data Files MANUELL - genau wie Chocolate Doom
+        function loadGameData() {
+            return new Promise(function (resolve, reject) {
+                addDebugLog('Warte auf Emscripten Runtime...');
+
+                // Warte bis Runtime bereit ist
+                FreeSerf(Module).then(function (instance) {
+                    addDebugLog('✓ Emscripten Runtime bereit!');
+
+                    // Speichere global
+                    FreeserfInstance = instance;
+
+                    // Jetzt ist FS verfügbar!
+                    try {
+                        // Erstelle /data Verzeichnis
+                        addDebugLog('Erstelle /data Verzeichnis...');
+                        instance.FS.mkdir('/data');
+                        addDebugLog('✓ /data erstellt');
+                    } catch (e) {
+                        addDebugLog('/data bereits vorhanden');
+                    }
+
+                    // Lade Game Data Files
+                    var dataFiles = ['SPAE.PA', 'SPAD.PA', 'SPAF.PA', 'SPAU.PA'];
+                    var loadPromises = [];
+
+                    dataFiles.forEach(function (filename) {
+                        var promise = fetch('data/' + filename)
+                            .then(function (response) {
+                                if (!response.ok) {
+                                    addDebugLog('✗ ' + filename + ' nicht gefunden', 'warn');
+                                    throw new Error('Not found');
+                                }
+                                addDebugLog('✓ ' + filename + ' gefunden, lade...');
+                                return response.arrayBuffer();
+                            })
+                            .then(function (buffer) {
+                                var uint8 = new Uint8Array(buffer);
+                                instance.FS.writeFile('/data/' + filename, uint8);
+                                addDebugLog('✓ ' + filename + ' ins VFS geschrieben (' + buffer.byteLength + ' bytes)');
+                                return filename;
+                            })
+                            .catch(function (e) {
+                                // Datei nicht gefunden - OK, versuche nächste
+                                return null;
+                            });
+
+                        loadPromises.push(promise);
+                    });
+
+                    // Warte bis mindestens eine Datei geladen wurde
+                    Promise.all(loadPromises).then(function (results) {
+                        var loaded = results.filter(function (r) { return r !== null; });
+
+                        if (loaded.length > 0) {
+                            addDebugLog('=== Game Data geladen: ' + loaded.join(', ') + ' ===');
+
+                            // Prüfe VFS
+                            try {
+                                var files = instance.FS.readdir('/data');
+                                addDebugLog('VFS /data enthält: ' + files.join(', '));
+                            } catch (e) { }
+
+                            resolve(instance);
+                        } else {
+                            addDebugLog('❌ KEINE Game Data gefunden!', 'error');
+                            addDebugLog('Stelle sicher dass data/SPAE.PA existiert!', 'error');
+                            reject(new Error('No game data found'));
+                        }
+                    }).catch(reject);
+
+                }).catch(function (err) {
+                    addDebugLog('❌ Runtime Fehler: ' + err, 'error');
+                    reject(err);
+                });
+            });
+        }
+
+        // Starte den Ladevorgang
+        addDebugLog('Starte Game Data Loading...');
+        loadGameData()
+            .then(function (instance) {
+                addDebugLog('✅ Freeserf komplett geladen und bereit!');
+                addDebugLog('Starte main()...');
+
+                // Rufe main() manuell auf - JETZT sind die Dateien geladen!
+                try {
+                    instance.callMain(Module.arguments || []);
+                    addDebugLog('✓ main() aufgerufen!');
+                } catch (e) {
+                    addDebugLog('❌ main() Fehler: ' + e.message, 'error');
+                    console.error('main() error:', e);
+                }
+            })
+            .catch(function (err) {
+                addDebugLog('❌ Fehler: ' + err.message, 'error');
+                console.error('Load error:', err);
+            });
+    </script>
 </body>
 </html>

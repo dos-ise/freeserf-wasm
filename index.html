@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freeserf - WebAssembly Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        #gameContainer {
+            background: #000;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+            position: relative;
+            max-width: 1024px;
+            width: 100%;
+        }
+        
+        #canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        
+        #loadingOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+        
+        #loadingOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top-color: #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        #statusText {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+        
+        #progressBarContainer {
+            width: 300px;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        #progressBar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        #startButton {
+            display: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        #startButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+        
+        #startButton.visible {
+            display: inline-block;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-1px);
+        }
+        
+        .info-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            max-width: 1024px;
+            width: 100%;
+        }
+        
+        .info-panel h3 {
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-card {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .info-card h4 {
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #8BC34A;
+        }
+        
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+        
+        .info-card li:before {
+            content: "▸ ";
+            color: #4CAF50;
+        }
+        
+        footer {
+            padding: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            font-size: 0.9em;
+        }
+        
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🏰 Freeserf</h1>
+        <p class="subtitle">Settlers 1 Recreation - WebAssembly Edition</p>
+    </header>
+    
+    <main>
+        <div id="gameContainer">
+            <canvas id="canvas" width="1024" height="768" tabindex="1"></canvas>
+            
+            <div id="loadingOverlay">
+                <div class="spinner"></div>
+                <div id="statusText">Initialisiere Spiel...</div>
+                <div id="progressBarContainer">
+                    <div id="progressBar"></div>
+                </div>
+                <button id="startButton">🎮 Spiel starten</button>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" onclick="toggleFullscreen()">⛶ Vollbild</button>
+            <button class="control-btn" id="muteBtn" onclick="toggleSound()">🔊 Sound</button>
+            <button class="control-btn" onclick="saveGame()">💾 Speichern</button>
+            <button class="control-btn" onclick="loadGame()">📂 Laden</button>
+            <button class="control-btn" onclick="resetGame()">↻ Neustart</button>
+        </div>
+        
+        <div class="info-panel">
+            <h3>📖 Spielanleitung</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Steuerung</h4>
+                    <ul>
+                        <li>Maus: Navigation & Auswahl</li>
+                        <li>Tab: Nachrichten durchblättern</li>
+                        <li>P: Pause</li>
+                        <li>+/-: Spielgeschwindigkeit</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h4>Tastenkombinationen</h4>
+                    <ul>
+                        <li>Ctrl+F: Vollbild</li>
+                        <li>Ctrl+S: Speichern</li>
+                        <li>Ctrl+L: Laden</li>
+                        <li>ESC: Menü</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h4>Spielziel</h4>
+                    <ul>
+                        <li>Baue deine Siedlung auf</li>
+                        <li>Versorge deine Serfs</li>
+                        <li>Expandiere dein Reich</li>
+                        <li>Besiege deine Gegner</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h4>Hinweise</h4>
+                    <ul>
+                        <li>Speicherstände werden lokal gesichert</li>
+                        <li>Audio startet nach User-Interaktion</li>
+                        <li>Beste Performance in Chrome/Edge</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>
+            Freeserf - Open Source Recreation | 
+            <a href="https://github.com/freeserf/freeserf" target="_blank">GitHub</a> | 
+            WebAssembly Build
+        </p>
+    </footer>
+    
+    <script>
+        // Emscripten Module Configuration
+        var Module = {
+            canvas: document.getElementById('canvas'),
+            
+            print: function(text) {
+                console.log('[Freeserf]', text);
+            },
+            
+            printErr: function(text) {
+                console.error('[Freeserf Error]', text);
+            },
+            
+            setStatus: function(text) {
+                const statusText = document.getElementById('statusText');
+                const startButton = document.getElementById('startButton');
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                
+                if (!text) {
+                    statusText.textContent = 'Bereit zum Spielen!';
+                    startButton.classList.add('visible');
+                } else if (text.includes('Running')) {
+                    loadingOverlay.classList.add('hidden');
+                } else {
+                    statusText.textContent = text;
+                }
+            },
+            
+            totalDependencies: 0,
+            
+            monitorRunDependencies: function(left) {
+                this.totalDependencies = Math.max(this.totalDependencies, left);
+                const progress = this.totalDependencies > 0 
+                    ? ((this.totalDependencies - left) / this.totalDependencies * 100)
+                    : 0;
+                
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = progress + '%';
+                
+                if (left === 0) {
+                    Module.setStatus('');
+                } else {
+                    Module.setStatus('Lade Abhängigkeiten... (' + left + ')');
+                }
+            },
+            
+            preRun: [
+                function() {
+                    console.log('Loading game data files...');
+                    
+                    // Lade SPAE.PA (oder andere Varianten) wie doom1.wad
+                    // Versuche verschiedene Dateien in der Reihenfolge
+                    var dataFiles = [
+                        'SPAE.PA',  // English
+                        'SPAD.PA',  // German
+                        'SPAF.PA',  // French
+                        'SPAU.PA'   // Custom
+                    ];
+                    
+                    // Erstelle Verzeichnis falls nötig
+                    try {
+                        FS.mkdir('/data');
+                    } catch(e) {
+                        console.log('Data path already exists or not needed');
+                    }
+                    
+                    // Lade erste verfügbare Datei
+                    var loaded = false;
+                    for (var i = 0; i < dataFiles.length; i++) {
+                        try {
+                            var filename = dataFiles[i];
+                            console.log('Trying to load: data/' + filename);
+                            
+                            // WICHTIG: Genau wie bei doom1.wad!
+                            // FS.createPreloadedFile(parent, name, url, canRead, canWrite)
+                            FS.createPreloadedFile(
+                                '/',                    // Parent directory
+                                filename,               // Filename in VFS
+                                'data/' + filename,     // URL to fetch from
+                                true,                   // Can read
+                                false                   // Can't write
+                            );
+                            
+                            console.log('✓ Loaded: ' + filename);
+                            loaded = true;
+                            break;
+                        } catch(e) {
+                            console.log('Could not load ' + dataFiles[i] + ', trying next...');
+                        }
+                    }
+                    
+                    if (!loaded) {
+                        console.warn('⚠ No game data files found! Place SPAE.PA in data/ directory');
+                    }
+                }
+            ],
+            
+            postRun: [
+                function() {
+                    console.log('Freeserf initialized!');
+                    
+                    // Setup IndexedDB für persistente Savegames
+                    try {
+                        FS.mkdir('/saves');
+                        FS.mount(IDBFS, {}, '/saves');
+                        
+                        // Lade existierende Saves
+                        FS.syncfs(true, function(err) {
+                            if (err) {
+                                console.warn('Could not load saves:', err);
+                            } else {
+                                console.log('Saves loaded from IndexedDB');
+                            }
+                        });
+                    } catch(e) {
+                        console.warn('IndexedDB not available:', e);
+                    }
+                }
+            ]
+        };
+        
+        // Start Button Handler
+        document.getElementById('startButton').addEventListener('click', function() {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.add('hidden');
+            
+            // Focus Canvas für Keyboard Input
+            const canvas = document.getElementById('canvas');
+            canvas.focus();
+            
+            // Audio Initialisierung (Browser benötigt User-Interaktion)
+            if (typeof SDL2 !== 'undefined' && SDL2.audioContext) {
+                SDL2.audioContext.resume();
+            }
+        });
+        
+        // Fullscreen Toggle
+        function toggleFullscreen() {
+            const canvas = document.getElementById('canvas');
+            if (!document.fullscreenElement) {
+                canvas.requestFullscreen().catch(err => {
+                    alert('Vollbild nicht verfügbar: ' + err.message);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // Sound Toggle
+        let soundMuted = false;
+        function toggleSound() {
+            soundMuted = !soundMuted;
+            const btn = document.getElementById('muteBtn');
+            btn.textContent = soundMuted ? '🔇 Stumm' : '🔊 Sound';
+            
+            // SDL Audio Mute/Unmute falls verfügbar
+            if (typeof SDL2 !== 'undefined' && SDL2.audioContext) {
+                SDL2.audioContext[soundMuted ? 'suspend' : 'resume']();
+            }
+        }
+        
+        // Save Game
+        function saveGame() {
+            try {
+                // Trigger Freeserf's save function (anpassen an tatsächliche API)
+                if (Module._save_game) {
+                    Module._save_game();
+                }
+                
+                // Sync zu IndexedDB
+                FS.syncfs(false, function(err) {
+                    if (err) {
+                        alert('Fehler beim Speichern: ' + err);
+                    } else {
+                        console.log('Game saved to IndexedDB');
+                        alert('Spiel gespeichert!');
+                    }
+                });
+            } catch(e) {
+                console.error('Save failed:', e);
+                alert('Speichern nicht verfügbar');
+            }
+        }
+        
+        // Load Game
+        function loadGame() {
+            try {
+                // Sync von IndexedDB
+                FS.syncfs(true, function(err) {
+                    if (err) {
+                        alert('Fehler beim Laden: ' + err);
+                    } else {
+                        console.log('Saves loaded from IndexedDB');
+                        
+                        // Trigger Freeserf's load function
+                        if (Module._load_game) {
+                            Module._load_game();
+                        }
+                        alert('Spiel geladen!');
+                    }
+                });
+            } catch(e) {
+                console.error('Load failed:', e);
+                alert('Laden nicht verfügbar');
+            }
+        }
+        
+        // Reset Game
+        function resetGame() {
+            if (confirm('Spiel wirklich neu starten? Ungespeicherter Fortschritt geht verloren.')) {
+                location.reload();
+            }
+        }
+        
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key.toLowerCase()) {
+                    case 'f':
+                        e.preventDefault();
+                        toggleFullscreen();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        saveGame();
+                        break;
+                    case 'l':
+                        e.preventDefault();
+                        loadGame();
+                        break;
+                }
+            }
+        });
+        
+        // Error Handling
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Error:', msg, 'at', url, lineNo + ':' + columnNo);
+            const statusText = document.getElementById('statusText');
+            statusText.textContent = 'Fehler beim Laden: ' + msg;
+            statusText.style.color = '#ff5252';
+            return false;
+        };
+        
+        // Prevent accidental page unload
+        window.addEventListener('beforeunload', function(e) {
+            if (Module.HEAPU8) { // Check if game is running
+                e.preventDefault();
+                e.returnValue = '';
+                return '';
+            }
+        });
+    </script>
+    
+    <!-- Emscripten generiert diese Datei beim Build -->
+    <script src="FreeSerf.js"></script>
+    <script>
+        // Mit MODULARIZE=1 und EXPORT_NAME='FreeSerf' müssen wir FreeSerf() aufrufen
+        FreeSerf(Module).then(function(instance) {
+            console.log('Freeserf loaded successfully');
+            // Das Module-Objekt ist jetzt initialisiert
+        });
+    </script>
+</body>
+</html>

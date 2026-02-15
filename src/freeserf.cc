@@ -37,6 +37,34 @@
 # include <SDL.h>
 #endif  // WIN32
 
+// ============================================================================
+// EMSCRIPTEN / WEBASSEMBLY SUPPORT
+// ============================================================================
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+
+// Static context for main loop - needed for emscripten_set_main_loop
+static EventLoop *g_event_loop = nullptr;
+static Interface *g_interface = nullptr;
+static bool g_game_running = true;
+
+// One iteration of the game loop
+void main_loop_iteration() {
+  if (!g_game_running || !g_event_loop) {
+    Log::Info["main"] << "Stopping game loop...";
+    if (g_interface && g_event_loop) {
+      g_event_loop->del_handler(g_interface);
+    }
+    emscripten_cancel_main_loop();
+    return;
+  }
+  
+  // Run one iteration of the event loop
+  g_event_loop->run_iteration();
+}
+#endif
+// ============================================================================
+
 int
 main(int argc, char *argv[]) {
   std::string data_dir;
@@ -135,11 +163,27 @@ main(int argc, char *argv[]) {
   event_loop.add_handler(&interface);
 
   /* Start game loop */
+#ifdef __EMSCRIPTEN__
+  // WebAssembly: Use browser-friendly main loop
+  Log::Info["main"] << "Starting Emscripten main loop...";
+  g_event_loop = &event_loop;
+  g_interface = &interface;
+  g_game_running = true;
+  
+  // Set main loop - browser will call main_loop_iteration repeatedly
+  // Parameters: function, fps (0 = browser decides), simulate_infinite_loop
+  emscripten_set_main_loop(main_loop_iteration, 0, 1);
+  
+  // IMPORTANT: Code after emscripten_set_main_loop is never reached!
+  // Cleanup happens in main_loop_iteration when cancelled
+#else
+  // Desktop: Traditional blocking loop
   event_loop.run();
 
   event_loop.del_handler(&interface);
 
   Log::Info["main"] << "Cleaning up...";
+#endif
 
   return EXIT_SUCCESS;
 }

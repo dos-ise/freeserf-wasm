@@ -101,6 +101,7 @@ class EventLoop {
   virtual ~EventLoop() {}
 
   virtual void run() = 0;
+  virtual void run_iteration() = 0;  // NEW: For Emscripten main loop
   virtual void quit() = 0;
   virtual void deferred_call(DeferredCall call, void *data) = 0;
 
